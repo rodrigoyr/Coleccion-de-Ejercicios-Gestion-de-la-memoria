@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.26"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Ejercicio",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Ejercicio::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Ejercicio-Debug-242f17b3d988c59ead9f.json",
+					"name" : "Ejercicio",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Ingenier\u00eda Inform\u00e1tica UAX/2023-24/1er cuatrimestre/Programaci\u00f3n/Ejercicios/Coleccion-de-Ejercicios-Gestion-de-la-memoria/Ejercicio/cmake-build-debug",
+		"source" : "C:/Ingenier\u00eda Inform\u00e1tica UAX/2023-24/1er cuatrimestre/Programaci\u00f3n/Ejercicios/Coleccion-de-Ejercicios-Gestion-de-la-memoria/Ejercicio"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 5
+	}
+}
