@@ -1,6 +1,6 @@
 #include <windows.h>
-#include <stdio.h>
 #include <tchar.h>
+#include <stdio.h>
 
 #define SIZE 4096
 
@@ -9,12 +9,12 @@ int _tmain(int argc, _TCHAR* argv[]) {
     LPCTSTR pBuf;
 
     hMapFile = CreateFileMapping(
-        INVALID_HANDLE_VALUE,
-        NULL,
-        PAGE_READWRITE,
-        0,
-        SIZE,
-        _T("SharedMemory"));
+            INVALID_HANDLE_VALUE,
+            NULL,
+            PAGE_READWRITE,
+            0,
+            SIZE,
+            _T("SharedMemory"));
 
     if (hMapFile == NULL) {
         _tprintf(_T("Could not create file mapping object (%d).\n"), GetLastError());
@@ -22,11 +22,11 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
 
     pBuf = (LPTSTR)MapViewOfFile(
-        hMapFile,
-        FILE_MAP_ALL_ACCESS,
-        0,
-        0,
-        SIZE);
+            hMapFile,
+            FILE_MAP_ALL_ACCESS,
+            0,
+            0,
+            SIZE);
 
     if (pBuf == NULL) {
         _tprintf(_T("Could not map view of file (%d).\n"), GetLastError());
@@ -42,17 +42,17 @@ int _tmain(int argc, _TCHAR* argv[]) {
     si.cb = sizeof(si);
     ZeroMemory(&pi, sizeof(pi));
 
-    // Create child process
-    if (!CreateProcess(NULL,
-                       _T("ChildProcess.exe"),
-                       NULL,
-                       NULL,
-                       FALSE,
-                       0,
-                       NULL,
-                       NULL,
-                       &si,
-                       &pi))
+    if (!CreateProcess(
+            NULL,
+            _T("ChildProcess.exe"),
+            NULL,
+            NULL,
+            FALSE,
+            0,
+            NULL,
+            NULL,
+            &si,
+            &pi))
     {
         _tprintf(_T("CreateProcess failed (%d).\n"), GetLastError());
         return 1;
