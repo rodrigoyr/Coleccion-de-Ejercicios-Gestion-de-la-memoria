@@ -1,35 +1,69 @@
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+#include <windows.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/wait.h>
+#include <tchar.h>
 
 #define SIZE 4096
 
-int main() {
-    char *shared_memory = mmap(NULL, SIZE, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
-    if (shared_memory == MAP_FAILED) {
-        perror("mmap");
-        exit(EXIT_FAILURE);
+int _tmain(int argc, _TCHAR* argv[]) {
+    HANDLE hMapFile;
+    LPCTSTR pBuf;
+
+    hMapFile = CreateFileMapping(
+        INVALID_HANDLE_VALUE,
+        NULL,
+        PAGE_READWRITE,
+        0,
+        SIZE,
+        _T("SharedMemory"));
+
+    if (hMapFile == NULL) {
+        _tprintf(_T("Could not create file mapping object (%d).\n"), GetLastError());
+        return 1;
     }
 
-    pid_t pid = fork();
+    pBuf = (LPTSTR)MapViewOfFile(
+        hMapFile,
+        FILE_MAP_ALL_ACCESS,
+        0,
+        0,
+        SIZE);
 
-    if (pid < 0) {
-        perror("fork");
-        exit(EXIT_FAILURE);
-    } else if (pid == 0) {
-        printf("Child reads: %s\n", shared_memory);
-        munmap(shared_memory, SIZE);
-        exit(EXIT_SUCCESS);
-    } else {
-        strcpy(shared_memory, "Hello, child process!");
-        wait(NULL);
-        munmap(shared_memory, SIZE);
+    if (pBuf == NULL) {
+        _tprintf(_T("Could not map view of file (%d).\n"), GetLastError());
+        CloseHandle(hMapFile);
+        return 1;
     }
+
+    _stprintf((TCHAR*)pBuf, _T("Hello, child process!"));
+
+    PROCESS_INFORMATION pi;
+    STARTUPINFO si;
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    ZeroMemory(&pi, sizeof(pi));
+
+    // Create child process
+    if (!CreateProcess(NULL,
+                       _T("ChildProcess.exe"),
+                       NULL,
+                       NULL,
+                       FALSE,
+                       0,
+                       NULL,
+                       NULL,
+                       &si,
+                       &pi))
+    {
+        _tprintf(_T("CreateProcess failed (%d).\n"), GetLastError());
+        return 1;
+    }
+
+    WaitForSingleObject(pi.hProcess, INFINITE);
+
+    _tprintf(_T("Child reads: %s\n"), pBuf);
+
+    UnmapViewOfFile(pBuf);
+    CloseHandle(hMapFile);
 
     return 0;
 }
